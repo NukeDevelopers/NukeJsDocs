@@ -28,5 +28,5 @@ jobs:
             export IMAGE='ghcr.io/${{ github.repository }}:'"$IMAGE_TAG"
             docker pull "$IMAGE"
             docker rm -f nukejsdocs 2>/dev/null || true
-            docker run -d --name nukejsdocs --restart unless-stopped -p 8080:80 "$IMAGE"
+            docker run -d --name nukejsdocs --restart unless-stopped -p 18765:80 "$IMAGE"
             docker image prune -f

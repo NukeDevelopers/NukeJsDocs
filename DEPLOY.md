@@ -6,7 +6,7 @@
 docker compose up -d --build
 ```
 
-站点默认访问 `http://服务器地址:8080`。
+站点默认访问 `http://服务器地址:18765`。
 
 ## GitHub Actions + GHCR
 
@@ -26,11 +26,11 @@ ghcr.io/组织名/仓库名:latest
 docker login ghcr.io
 docker pull ghcr.io/组织名/仓库名:latest
 docker rm -f nukejsdocs 2>/dev/null || true
-docker run -d --name nukejsdocs --restart unless-stopped -p 8080:80 \
+docker run -d --name nukejsdocs --restart unless-stopped -p 18765:80 \
   ghcr.io/组织名/仓库名:latest
 ```
 
-也可以手动触发 `Deploy docs container` 工作流。需要在仓库 Secrets 中配置：
+每次推送到 `main` 后，`Build and publish docs image` 会先发布 GHCR 镜像，再自动通过 SSH 更新服务器。也可以手动触发 `Deploy docs container` 工作流。需要在仓库 Secrets 中配置：
 
 - `DEPLOY_HOST`
 - `DEPLOY_USER`
@@ -39,3 +39,5 @@ docker run -d --name nukejsdocs --restart unless-stopped -p 8080:80 \
 - `GHCR_READ_TOKEN`
 
 部署工作流会拉取指定标签并重建名为 `nukejsdocs` 的容器。
+
+> 如果服务器上的 GHCR 镜像设为公开，可以将 `GHCR_READ_TOKEN` 留空，并删除部署脚本中的 `docker login` 命令。

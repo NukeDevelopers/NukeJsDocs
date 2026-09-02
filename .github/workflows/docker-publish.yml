@@ -51,3 +51,30 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  deploy:
+    name: Deploy to server
+    needs: docker
+    # Every push to main publishes a new image first, then updates the server.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Deploy latest image over SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: ${{ secrets.DEPLOY_PORT || 22 }}
+          script: |
+            set -eu
+            echo '${{ secrets.GHCR_READ_TOKEN }}' | docker login ghcr.io -u '${{ github.repository_owner }}' --password-stdin
+            IMAGE='ghcr.io/${{ github.repository }}:latest'
+            docker pull "$IMAGE"
+            docker rm -f nukejsdocs 2>/dev/null || true
+            docker run -d --name nukejsdocs --restart unless-stopped -p 18765:80 "$IMAGE"
+            docker image prune -f

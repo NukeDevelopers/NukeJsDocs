@@ -10,7 +10,7 @@ docker compose up -d --build
 
 ## GitHub Actions + GHCR
 
-`.github/workflows/docker-publish.yml` 会在推送 `main` 或 `v*.*.*` 标签时构建镜像并发布到：
+`.github/workflows/docker-publish.yml` 会在每次 push 时构建镜像并发布到：
 
 ```text
 ghcr.io/组织名/仓库名:latest
@@ -30,7 +30,7 @@ docker run -d --name nukejsdocs --restart unless-stopped -p 18765:80 \
   ghcr.io/组织名/仓库名:latest
 ```
 
-每次推送到 `main` 后，`Build and publish docs image` 会先发布 GHCR 镜像，再自动通过 SSH 更新服务器。也可以手动触发 `Deploy docs container` 工作流。需要在仓库 Secrets 中配置：
+每次 push 后，`Build and publish docs image` 会先发布当前提交的 GHCR 镜像，再自动通过 SSH 更新服务器。也可以手动触发 `Deploy docs container` 工作流。需要在仓库 Secrets 中配置：
 
 - `DEPLOY_HOST`
 - `DEPLOY_USER`

@@ -1,0 +1,82 @@
+:root {
+  --vp-c-brand: #f472b6;
+  --vp-c-brand-light: #f9a8d4;
+  --vp-c-brand-lighter: #fbcfe8;
+  --vp-c-brand-dark: #ec4899;
+  --vp-c-brand-darker: #db2777;
+  --vp-c-brand-1: #ec4899;
+  --vp-c-brand-2: #f472b6;
+  --vp-c-brand-3: #f9a8d4;
+  --vp-c-brand-soft: rgba(244, 114, 182, 0.18);
+  --vp-c-pink: #ec4899;
+  --vp-c-pink-light: #f472b6;
+  --vp-c-pink-lighter: #f9a8d4;
+  --vp-c-pink-dark: #db2777;
+  --vp-c-pink-darker: #be185d;
+  --vp-c-pink-dimm-1: rgba(236, 72, 153, 0.5);
+  --vp-c-pink-dimm-2: rgba(236, 72, 153, 0.25);
+  --vp-c-pink-dimm-3: rgba(236, 72, 153, 0.08);
+  /* VitePress alpha uses the green palette as the default semantic brand. */
+  --vp-c-green: #f472b6;
+  --vp-c-green-light: #f9a8d4;
+  --vp-c-green-lighter: #fbcfe8;
+  --vp-c-green-dark: #ec4899;
+  --vp-c-green-darker: #db2777;
+  --vp-c-green-dimm-1: rgba(236, 72, 153, 0.5);
+  --vp-c-green-dimm-2: rgba(236, 72, 153, 0.25);
+  --vp-c-green-dimm-3: rgba(236, 72, 153, 0.08);
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(120deg, #db2777 20%, #f472b6 80%);
+  --vp-home-hero-image-background-image: linear-gradient(-45deg, #db277755 30%, #f9a8d455);
+  --vp-home-hero-image-filter: blur(44px);
+}
+
+.VPHero .name,
+.VPHero .text {
+  letter-spacing: -0.03em;
+}
+
+.VPHero .tagline {
+  max-width: 680px;
+}
+
+.VPFeature {
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 12px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.VPFeature:hover {
+  border-color: var(--vp-c-brand-1);
+  transform: translateY(-2px);
+}
+
+.vp-doc div[class*='language-'] {
+  border-radius: 8px;
+}
+
+.vp-doc table {
+  display: table;
+  width: 100%;
+}
+
+.home-overview {
+  max-width: 760px;
+  margin: 2rem auto 0;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 10px;
+  background: var(--vp-c-bg-soft);
+  text-align: center;
+}
+
+.home-overview p {
+  margin: 0.65rem 0 0;
+  color: var(--vp-c-text-2);
+}
+
+@media (max-width: 640px) {
+  .VPHero .name { font-size: 42px; }
+  .VPHero .text { font-size: 28px; }
+  .VPHero .tagline { font-size: 17px; }
+}

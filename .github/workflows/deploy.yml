@@ -1,0 +1,32 @@
+name: Deploy docs container
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'GHCR image tag to deploy'
+        required: false
+        default: latest
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: ${{ secrets.DEPLOY_PORT || 22 }}
+          script: |
+            set -eu
+            mkdir -p ~/nukejsdocs
+            cd ~/nukejsdocs
+            echo '${{ secrets.GHCR_READ_TOKEN }}' | docker login ghcr.io -u '${{ github.repository_owner }}' --password-stdin
+            export IMAGE_TAG='${{ inputs.image_tag }}'
+            export IMAGE='ghcr.io/${{ github.repository }}:'"$IMAGE_TAG"
+            docker pull "$IMAGE"
+            docker rm -f nukejsdocs 2>/dev/null || true
+            docker run -d --name nukejsdocs --restart unless-stopped -p 8080:80 "$IMAGE"
+            docker image prune -f

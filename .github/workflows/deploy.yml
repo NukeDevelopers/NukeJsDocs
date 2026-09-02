@@ -23,7 +23,9 @@ jobs:
             set -eu
             mkdir -p ~/nukejsdocs
             cd ~/nukejsdocs
-            echo '${{ secrets.GHCR_READ_TOKEN }}' | docker login ghcr.io -u '${{ github.repository_owner }}' --password-stdin
+            if [ -n '${{ secrets.GHCR_READ_TOKEN }}' ]; then
+              echo '${{ secrets.GHCR_READ_TOKEN }}' | docker login ghcr.io -u '${{ github.repository_owner }}' --password-stdin
+            fi
             export IMAGE_TAG='${{ inputs.image_tag }}'
             export IMAGE='ghcr.io/${{ github.repository }}:'"$IMAGE_TAG"
             docker pull "$IMAGE"

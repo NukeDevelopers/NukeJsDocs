@@ -36,7 +36,7 @@ docker run -d --name nukejsdocs --restart unless-stopped -p 18765:80 \
 - `DEPLOY_USER`
 - `DEPLOY_PORT`（可选）
 - `DEPLOY_SSH_KEY`
-- `GHCR_READ_TOKEN`
+- `GHCR_READ_TOKEN`（镜像为私有时需要；镜像公开时可留空）
 
 部署工作流会拉取指定标签并重建名为 `nukejsdocs` 的容器。
 

@@ -36,9 +36,9 @@ docker run -d --name nukejsdocs --restart unless-stopped -p 18765:80 \
 - `DEPLOY_USER`
 - `DEPLOY_PORT`（可选）
 - `DEPLOY_SSH_KEY`
-- `GHCR_READ_TOKEN`（镜像为私有时需要；镜像公开时可留空）
+- `GHCR_READ_TOKEN`（可选；自动部署默认使用当前 Action 的 `GITHUB_TOKEN`）
 - `GHCR_USERNAME`（可选，默认使用 `NukeDevelopers`）
 
 部署工作流会拉取指定标签并重建名为 `nukejsdocs` 的容器。
 
-> 如果服务器上的 GHCR 镜像设为公开，可以将 `GHCR_READ_TOKEN` 留空，并删除部署脚本中的 `docker login` 命令。
+自动部署会把当前 Action 的短期 `GITHUB_TOKEN` 传给服务器用于拉取镜像，因此不需要单独创建长期 Token。手动部署工作流也会使用同一机制。

@@ -13,7 +13,7 @@ docker compose up -d --build
 `.github/workflows/docker-publish.yml` 会在每次 push 时构建镜像并发布到：
 
 ```text
-ghcr.io/组织名/仓库名:latest
+ghcr.io/nukedevelopers/nukejsdocs:latest
 ```
 
 工作流只需要 GitHub 内置的 `GITHUB_TOKEN`，无需额外配置发布凭据。首次发布后，在仓库 **Packages** 页面将镜像设为公开，或在服务器使用有 `read:packages` 权限的 Token 拉取。
@@ -24,10 +24,10 @@ ghcr.io/组织名/仓库名:latest
 
 ```bash
 docker login ghcr.io
-docker pull ghcr.io/组织名/仓库名:latest
+docker pull ghcr.io/nukedevelopers/nukejsdocs:latest
 docker rm -f nukejsdocs 2>/dev/null || true
 docker run -d --name nukejsdocs --restart unless-stopped -p 18765:80 \
-  ghcr.io/组织名/仓库名:latest
+  ghcr.io/nukedevelopers/nukejsdocs:latest
 ```
 
 每次 push 后，`Build and publish docs image` 会先发布当前提交的 GHCR 镜像，再自动通过 SSH 更新服务器。也可以手动触发 `Deploy docs container` 工作流。需要在仓库 Secrets 中配置：

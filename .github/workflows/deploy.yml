@@ -27,7 +27,7 @@ jobs:
               echo '${{ secrets.GHCR_READ_TOKEN }}' | docker login ghcr.io -u '${{ github.repository_owner }}' --password-stdin
             fi
             export IMAGE_TAG='${{ inputs.image_tag }}'
-            export IMAGE='ghcr.io/${{ github.repository }}:'"$IMAGE_TAG"
+            export IMAGE='ghcr.io/nukedevelopers/nukejsdocs:'"$IMAGE_TAG"
             docker pull "$IMAGE"
             docker rm -f nukejsdocs 2>/dev/null || true
             docker run -d --name nukejsdocs --restart unless-stopped -p 18765:80 "$IMAGE"

@@ -6,7 +6,9 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  # Docker/OCI repository names must be lowercase. Keep this explicit because
+  # github.repository preserves the organization's capitalization.
+  IMAGE_NAME: nukedevelopers/nukejsdocs
 
 jobs:
   docker:
@@ -74,7 +76,7 @@ jobs:
             if [ -n '${{ secrets.GHCR_READ_TOKEN }}' ]; then
               echo '${{ secrets.GHCR_READ_TOKEN }}' | docker login ghcr.io -u '${{ github.repository_owner }}' --password-stdin
             fi
-            IMAGE='ghcr.io/${{ github.repository }}:${{ github.sha }}'
+            IMAGE='ghcr.io/nukedevelopers/nukejsdocs:${{ github.sha }}'
             docker pull "$IMAGE"
             docker rm -f nukejsdocs 2>/dev/null || true
             docker run -d --name nukejsdocs --restart unless-stopped -p 18765:80 "$IMAGE"

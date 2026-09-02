@@ -66,17 +66,25 @@ jobs:
     steps:
       - name: Deploy current commit image over SSH
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          GHCR_READ_TOKEN: ${{ secrets.GHCR_READ_TOKEN }}
+          GHCR_USERNAME: ${{ secrets.GHCR_USERNAME || github.repository_owner }}
+          IMAGE: ghcr.io/nukedevelopers/nukejsdocs:${{ github.sha }}
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: ${{ secrets.DEPLOY_PORT || 22 }}
+          envs: GHCR_READ_TOKEN,GHCR_USERNAME,IMAGE
           script: |
             set -eu
-            if [ -n '${{ secrets.GHCR_READ_TOKEN }}' ]; then
-              echo '${{ secrets.GHCR_READ_TOKEN }}' | docker login ghcr.io -u '${{ github.repository_owner }}' --password-stdin
+            command -v docker >/dev/null 2>&1 || { echo 'docker is not installed on the server'; exit 1; }
+            if [ -z "${GHCR_READ_TOKEN:-}" ]; then
+              echo 'GHCR_READ_TOKEN is required when the GHCR package is private';
+              echo 'Set the repository secret or make the package public.';
+              exit 1;
             fi
-            IMAGE='ghcr.io/nukedevelopers/nukejsdocs:${{ github.sha }}'
+            echo "$GHCR_READ_TOKEN" | docker login ghcr.io -u "$GHCR_USERNAME" --password-stdin
             docker pull "$IMAGE"
             docker rm -f nukejsdocs 2>/dev/null || true
             docker run -d --name nukejsdocs --restart unless-stopped -p 18765:80 "$IMAGE"
